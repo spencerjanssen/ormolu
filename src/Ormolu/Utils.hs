@@ -13,6 +13,7 @@ module Ormolu.Utils
     unSrcSpan,
     getRealStartLine,
     getRealEndLine,
+    shiftToTheRight,
     separatedByBlank,
     withIndent,
   )
@@ -106,6 +107,17 @@ getRealStartLine (L spn _) = srcSpanStartLine spn
 -- | Get end line number from a 'RealLocated' value.
 getRealEndLine :: RealLocated a -> Int
 getRealEndLine (L spn _) = srcSpanEndLine spn
+
+-- | Shift the given 'RealLocated' object to the right.
+shiftToTheRight :: RealLocated a -> RealLocated a
+shiftToTheRight (L spn x) = (L spn' x)
+  where
+    spn' = mkRealSrcSpan
+      (incColumn 100 (realSrcSpanStart spn))
+      (incColumn 100 (realSrcSpanEnd spn))
+    incColumn :: Int -> RealSrcLoc -> RealSrcLoc
+    incColumn 0 l = l
+    incColumn n l = incColumn (n - 1) (advanceSrcLoc l ' ')
 
 -- | Do two declaration groups have a blank between them?
 separatedByBlank :: (a -> SrcSpan) -> NonEmpty a -> NonEmpty a -> Bool

@@ -78,7 +78,8 @@ p_hsModule shebangs pragmas (L moduleSpan HsModule {..}) = do
                   l <- getStartLine x
                   M.lookup l importComments
             withCommentStream comments $ do
-              located' p_hsmodImport x
+              located' (withCommentStream [] . p_hsmodImport) x
+              newline
               spitRemainingComments
     newline
     switchLayout (getLoc <$> hsmodDecls) $ do

@@ -64,7 +64,6 @@ p_hsmodImport ImportDecl {..} = do
             breakpoint
             (sitcc . located' (uncurry (p_lie layout)))
             (attachPositions xs)
-    newline
 p_hsmodImport (XImportDecl NoExt) = notImplemented "XImportDecl"
 
 p_lie :: Layout -> (Int, Int) -> IE GhcPs -> R ()

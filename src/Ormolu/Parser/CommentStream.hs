@@ -127,21 +127,21 @@ extractImportComments cs importLineSet =
             , lineIndices
             )
             x =
-                let (is, remainingIndices) = span (getRealStartLine x >=) lineIndices
-                    selectedIndex = last is
-                    lineIndices' = selectedIndex : remainingIndices
-                    xStart = getRealStartLine x
-                 in if (xStart == selectedIndex) || (xStart == endOfLastComment + 1)
-                  then ( (selectedIndex, x) : assignedSoFar
-                       , skippedSoFar
-                       , getRealEndLine x
-                       , lineIndices'
-                       )
-                  else ( assignedSoFar
-                       , x : skippedSoFar
-                       , max selectedIndex endOfLastComment
-                       , lineIndices'
-                       )
+              let (is, remainingIndices) = span (getRealStartLine x >=) lineIndices
+                  selectedIndex = last is
+                  lineIndices' = selectedIndex : remainingIndices
+                  xStart = getRealStartLine x
+               in if (xStart == selectedIndex) || (xStart == endOfLastComment + 1)
+                then ( (selectedIndex, (shiftToTheRight x)) : assignedSoFar
+                     , skippedSoFar
+                     , getRealEndLine x
+                     , lineIndices'
+                     )
+                else ( assignedSoFar
+                     , x : skippedSoFar
+                     , max selectedIndex endOfLastComment
+                     , lineIndices'
+                     )
           (rawAssignments, csSkipped, _, _) = foldl'
             f
             ([], [], 0, firstIndex : otherIndices)
